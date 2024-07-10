@@ -3,13 +3,12 @@ import com.dropbox.sign.ApiException;
 import com.dropbox.sign.api.SignatureRequestApi;
 import com.dropbox.sign.Configuration;
 import com.dropbox.sign.model.*;
+import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,8 +42,6 @@ public class SignatureRequestActions {
     int selectedX;
     int selectedY;
     static List<SubFormFieldsPerDocumentBase> fields;
-    final int PAGE_WIDTH = 612;
-    final int PAGE_HEIGHT = 792;
     String requestTitle = "NDA with Acme Co.";
     String requestSubject = "The NDA we talked about";
     String requestMessage = "Please sign this NDA and then we can discuss more. Let me know if you have any questions.";
@@ -69,11 +66,7 @@ public class SignatureRequestActions {
         JButton removeSignatureRequestButton = new JButton("Remove Signature Request Access");
         JButton bulkSendWithTemplateButton = new JButton("Embedded Bulk Send with Template");
 
-        signaturePanel.add(getSignatureRequestButton);
-        signaturePanel.add(listSignatureRequestsButton);
-        signaturePanel.add(downloadFilesButton);
-        signaturePanel.add(downloadFilesAsDataUriButton);
-        signaturePanel.add(downloadFilesAsFileUrlButton);
+
         signaturePanel.add(sendSignatureRequestFormFieldsButton);
         signaturePanel.add(sendSignatureRequestTextTagsButton);
         signaturePanel.add(sendSignatureRequestButton);
@@ -81,6 +74,11 @@ public class SignatureRequestActions {
         signaturePanel.add(cancelSignatureRequestButton);
         signaturePanel.add(removeSignatureRequestButton);
         signaturePanel.add(bulkSendWithTemplateButton);
+        signaturePanel.add(getSignatureRequestButton);
+        signaturePanel.add(listSignatureRequestsButton);
+        signaturePanel.add(downloadFilesButton);
+        signaturePanel.add(downloadFilesAsDataUriButton);
+        signaturePanel.add(downloadFilesAsFileUrlButton);
 
 
         getSignatureRequestButton.addActionListener(e -> executeGetSignatureRequest(signatureRequestApi));
@@ -306,90 +304,101 @@ public class SignatureRequestActions {
     }
 
     private void executeSendSignatureRequestTextTags(SignatureRequestApi signatureRequestApi) {
-        JDialog dialog = new JDialog((Frame)null, "Send Signature Request using Text Tags", true);
+        JDialog dialog = new JDialog((Frame) null, "Send Signature Request using Text Tags", true);
         dialog.setSize(800, 600);
         dialog.setLayout(new GridLayout(0, 2));
+
         JLabel pdfLabel = new JLabel("Select PDF:");
         JTextField pdfField = new JTextField();
         JButton pdfBrowseButton = new JButton("Browse");
+
         JLabel subjectLabel = new JLabel("Subject:");
         JTextField subjectField = new JTextField();
+
         JLabel messageLabel = new JLabel("Message:");
         JTextField messageField = new JTextField();
-        JCheckBox testModeCheckBox = new JCheckBox("SMS Notification", false);
-        JButton addSignerButton = new JButton("Add Signer");
-        JPanel signersPanel = new JPanel(new GridLayout(0, 3));
+
+        JCheckBox testModeCheckBox = new JCheckBox("Test Mode", false);
+
+        JLabel signer1EmailLabel = new JLabel("Signer 1 Email:");
+        JTextField signer1EmailField = new JTextField();
+        JLabel signer1NameLabel = new JLabel("Signer 1 Name:");
+        JTextField signer1NameField = new JTextField();
+        JLabel signer1PhoneLabel = new JLabel("Signer 1 Phone:");
+        JTextField signer1PhoneField = new JTextField();
+
+        JLabel signer2EmailLabel = new JLabel("Signer 2 Email:");
+        JTextField signer2EmailField = new JTextField();
+        JLabel signer2NameLabel = new JLabel("Signer 2 Name:");
+        JTextField signer2NameField = new JTextField();
+        JLabel signer2PhoneLabel = new JLabel("Signer 2 Phone:");
+        JTextField signer2PhoneField = new JTextField();
+
         JButton sendButton = new JButton("Send");
-        pdfBrowseButton.addActionListener((e) -> {
+
+        pdfBrowseButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             int option = fileChooser.showOpenDialog(dialog);
-            if (option == 0) {
+            if (option == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 pdfField.setText(file.getAbsolutePath());
             }
-
         });
-        addSignerButton.addActionListener((e) -> {
-            if (signersPanel.getComponentCount() / 2 < 50) {
-                int var10002 = signersPanel.getComponentCount() / 3;
-                JLabel emailLabel = new JLabel("Signer " + (var10002 + 1) + " Email:");
-                JTextField emailField = new JTextField();
-                var10002 = signersPanel.getComponentCount() / 3;
-                JLabel nameLabel = new JLabel("Signer " + (var10002 + 1) + " Name:");
-                JTextField nameField = new JTextField();
-                var10002 = signersPanel.getComponentCount() / 3;
-                JLabel phoneLabel = new JLabel("Signer " + (var10002 + 1) + " Phone:");
-                JTextField phoneField = new JTextField();
-                signersPanel.add(emailLabel);
-                signersPanel.add(emailField);
-                signersPanel.add(nameLabel);
-                signersPanel.add(nameField);
-                signersPanel.add(phoneLabel);
-                signersPanel.add(phoneField);
-                dialog.pack();
-            } else {
-                JOptionPane.showMessageDialog(dialog, "Maximum 50 signers allowed.");
-            }
 
-        });
-        sendButton.addActionListener((e) -> {
-            SignatureRequestSendRequest sendRequest = (new SignatureRequestSendRequest()).subject(subjectField.getText()).message(messageField.getText()).addFilesItem(new File(pdfField.getText()));
-
-            for(int i = 0; i < signersPanel.getComponentCount(); i += 6) {
-                JTextField emailField = (JTextField)signersPanel.getComponent(i + 1);
-                JTextField nameField = (JTextField)signersPanel.getComponent(i + 3);
-                JTextField phoneField = (JTextField)signersPanel.getComponent(i + 5);
-                sendRequest.addSignersItem((new SubSignatureRequestSigner()).emailAddress(emailField.getText()).name(nameField.getText()).smsPhoneNumber(phoneField.getText()).order(i / 6));
-            }
-
-            sendRequest.testMode(testModeCheckBox.isSelected());
-            sendRequest.useTextTags(true);
+        sendButton.addActionListener(e -> {
+            SignatureRequestSendRequest sendRequest = new SignatureRequestSendRequest()
+                    .subject(subjectField.getText())
+                    .message(messageField.getText())
+                    .addFilesItem(new File(pdfField.getText()))
+                    .addSignersItem(new SubSignatureRequestSigner()
+                            .emailAddress(signer1EmailField.getText())
+                            .name(signer1NameField.getText())
+                            .smsPhoneNumber(signer1PhoneField.getText())
+                            .order(0))
+                    .addSignersItem(new SubSignatureRequestSigner()
+                            .emailAddress(signer2EmailField.getText())
+                            .name(signer2NameField.getText())
+                            .smsPhoneNumber(signer2PhoneField.getText())
+                            .order(1))
+                    .testMode(testModeCheckBox.isSelected())
+                    .useTextTags(true);
 
             try {
                 SignatureRequestGetResponse result = signatureRequestApi.signatureRequestSend(sendRequest);
+
                 showResult(result);
                 dialog.dispose();
-            } catch (ApiException var13) {
-                ApiException ex = var13;
+            } catch (ApiException ex) {
                 handleException(ex);
             }
-
         });
+
         dialog.add(pdfLabel);
         dialog.add(pdfField);
-        dialog.add(new JLabel(""));
         dialog.add(pdfBrowseButton);
+
         dialog.add(subjectLabel);
         dialog.add(subjectField);
+
         dialog.add(messageLabel);
         dialog.add(messageField);
-        dialog.add(new JLabel(""));
+
         dialog.add(testModeCheckBox);
-        dialog.add(new JLabel(""));
-        dialog.add(addSignerButton);
-        dialog.add(new JLabel("Signers:"));
-        dialog.add(signersPanel);
-        dialog.add(new JLabel(""));
+
+        dialog.add(signer1EmailLabel);
+        dialog.add(signer1EmailField);
+        dialog.add(signer1NameLabel);
+        dialog.add(signer1NameField);
+        dialog.add(signer1PhoneLabel);
+        dialog.add(signer1PhoneField);
+
+        dialog.add(signer2EmailLabel);
+        dialog.add(signer2EmailField);
+        dialog.add(signer2NameLabel);
+        dialog.add(signer2NameField);
+        dialog.add(signer2PhoneLabel);
+        dialog.add(signer2PhoneField);
+
         dialog.add(sendButton);
         dialog.setVisible(true);
     }
@@ -681,65 +690,64 @@ public class SignatureRequestActions {
 
         try {
             jsonText = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result);
-        } catch (Exception var13) {
-            Exception ex = var13;
+        } catch (Exception ex) {
             jsonText = "Error parsing result to JSON: " + ex.getMessage();
         }
 
-        JTextArea textArea = new JTextArea();
-        textArea.setEditable(true);
-        textArea.setFont(new Font("Courier New", 0, 12));
-        StyleContext styleContext = StyleContext.getDefaultStyleContext();
-        AttributeSet regular = styleContext.getStyle("default");
-        styleContext.addAttribute(regular, StyleConstants.Foreground, Color.BLUE);
-        styleContext.addAttribute(regular, StyleConstants.Foreground, Color.GREEN);
-        styleContext.addAttribute(regular, StyleConstants.Foreground, Color.ORANGE);
+        JTextPane textPane = new JTextPane();
+        textPane.setEditable(false);
+        textPane.setFont(new Font("Courier New", Font.PLAIN, 12));
+
+        StyledDocument doc = textPane.getStyledDocument();
+        Style defaultStyle = doc.addStyle("default", null);
+        Style nameStyle = doc.addStyle("name", null);
+        StyleConstants.setForeground(nameStyle, Color.BLUE);
+        Style valueStyle = doc.addStyle("value", null);
+        StyleConstants.setForeground(valueStyle, Color.darkGray);
+        Style otherStyle = doc.addStyle("other", null);
+        StyleConstants.setForeground(otherStyle, Color.RED);
 
         try {
-            Object jsonObject = mapper.readValue(jsonText, Object.class);
-            String formattedJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
-            textArea.setText("");
-            textArea.setTabSize(2);
-            JsonParser parser = mapper.getFactory().createParser(formattedJson);
+            JsonFactory factory = new JsonFactory();
+            JsonParser parser = factory.createParser(jsonText);
 
-            label53:
-            while(true) {
-                while(true) {
-                    if (parser.isClosed()) {
-                        break label53;
-                    }
+            while (!parser.isClosed()) {
+                JsonToken token = parser.nextToken();
+                if (token == null) break;
 
-                    JsonToken jsonToken = parser.nextToken();
-                    if (JsonToken.FIELD_NAME.equals(jsonToken)) {
-                        textArea.append(parser.getCurrentName() + ": ");
-                        textArea.setCaretPosition(textArea.getDocument().getLength());
-                    } else if (JsonToken.VALUE_STRING.equals(jsonToken)) {
-                        textArea.append(parser.getText() + "\n");
-                        textArea.setCaretPosition(textArea.getDocument().getLength());
-                    } else if (!JsonToken.VALUE_NUMBER_INT.equals(jsonToken) && !JsonToken.VALUE_NUMBER_FLOAT.equals(jsonToken)) {
-                        if (!JsonToken.START_OBJECT.equals(jsonToken) && !JsonToken.START_ARRAY.equals(jsonToken)) {
-                            if (JsonToken.END_OBJECT.equals(jsonToken) || JsonToken.END_ARRAY.equals(jsonToken)) {
-                                textArea.append(Arrays.toString(parser.getCurrentToken().asByteArray()) + "\n");
-                                textArea.setCaretPosition(textArea.getDocument().getLength());
-                            }
-                        } else {
-                            textArea.append(Arrays.toString(parser.getCurrentToken().asByteArray()) + "\n");
-                            textArea.setCaretPosition(textArea.getDocument().getLength());
-                        }
-                    } else {
-                        textArea.append(String.valueOf(parser.getValueAsInt()) + "\n");
-                        textArea.setCaretPosition(textArea.getDocument().getLength());
-                    }
+                switch (token) {
+                    case FIELD_NAME:
+                        doc.insertString(doc.getLength(), parser.getCurrentName() + ": ", nameStyle);
+                        break;
+                    case VALUE_STRING:
+                        doc.insertString(doc.getLength(), "\"" + parser.getText() + "\"\n", valueStyle);
+                        break;
+                    case VALUE_NUMBER_INT:
+                    case VALUE_NUMBER_FLOAT:
+                        doc.insertString(doc.getLength(), parser.getNumberValue().toString() + "\n", valueStyle);
+                        break;
+                    case START_OBJECT:
+                    case END_OBJECT:
+                    case START_ARRAY:
+                    case END_ARRAY:
+                        doc.insertString(doc.getLength(), token.toString() + "\n", otherStyle);
+                        break;
+                    default:
+                        doc.insertString(doc.getLength(), token.toString() + "\n", defaultStyle);
+                        break;
                 }
             }
-        } catch (Exception var14) {
-            Exception ex = var14;
-            textArea.setText("Error displaying JSON: " + ex.getMessage());
+        } catch (Exception ex) {
+            try {
+                doc.insertString(doc.getLength(), "Error displaying JSON: " + ex.getMessage(), defaultStyle);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
         }
 
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        JScrollPane scrollPane = new JScrollPane(textPane);
         scrollPane.setPreferredSize(new Dimension(800, 600));
-        JOptionPane.showMessageDialog((Component)null, scrollPane, "JSON Result", -1);
+        JOptionPane.showMessageDialog(null, scrollPane, "JSON Result", JOptionPane.PLAIN_MESSAGE);
     }
 
     private static void handleException(ApiException e) {
@@ -831,6 +839,7 @@ public class SignatureRequestActions {
 
             try {
                 SignatureRequestGetResponse result = signatureRequestApi.signatureRequestSend(data);
+                showResult(result);
                 System.out.println(result);
             } catch (ApiException var6) {
                 ApiException e = var6;
