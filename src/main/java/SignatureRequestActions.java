@@ -657,16 +657,11 @@ public class SignatureRequestActions {
                         .customFields(List.of());
 
 
-                var cc1 = new SubCC()
-                        .role("CCExample")
-                        .emailAddress("accouting@email.com");
-
                 var data = new SignatureRequestBulkSendWithTemplateRequest()
                         .templateIds(List.of(templateId))
                         .subject(subject)
                         .message(message)
                         .signerList(List.of(signerList1))
-                        .ccs(List.of(cc1))
                         .testMode(true);
 
                 try {

@@ -7,13 +7,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="044f609d-d9ad-4992-8787-fa8f57736c64" name="Changes" comment="Text tags signature request bug. Change order of buttons from signatures">
+    <list default="true" id="044f609d-d9ad-4992-8787-fa8f57736c64" name="Changes" comment="Text tags signature request bug. Change order of buttons from signatures. Made results prettier">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/AccountActions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/AccountActions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/EmbeddedActions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/EmbeddedActions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SignatureRequestActions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SignatureRequestActions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/dev.env" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dev.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/texttags_example.pdf" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +88,7 @@
       <updated>1720498649522</updated>
       <workItem from="1720498650519" duration="19206000" />
       <workItem from="1720557665842" duration="479000" />
-      <workItem from="1720586435941" duration="1517000" />
+      <workItem from="1720586435941" duration="2456000" />
     </task>
     <task id="LOCAL-00001" summary="Form fields signature request bug.">
       <option name="closed" value="true" />
@@ -103,7 +98,23 @@
       <option name="project" value="LOCAL" />
       <updated>1720534946861</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Text tags signature request bug. Change order of buttons from signatures">
+      <option name="closed" value="true" />
+      <created>1720588137051</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1720588137051</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Text tags signature request bug. Change order of buttons from signatures. Made results prettier">
+      <option name="closed" value="true" />
+      <created>1720588156809</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1720588156809</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -123,6 +134,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Form fields signature request bug." />
     <MESSAGE value="Text tags signature request bug. Change order of buttons from signatures" />
-    <option name="LAST_COMMIT_MESSAGE" value="Text tags signature request bug. Change order of buttons from signatures" />
+    <MESSAGE value="Text tags signature request bug. Change order of buttons from signatures. Made results prettier" />
+    <option name="LAST_COMMIT_MESSAGE" value="Text tags signature request bug. Change order of buttons from signatures. Made results prettier" />
   </component>
 </project>
