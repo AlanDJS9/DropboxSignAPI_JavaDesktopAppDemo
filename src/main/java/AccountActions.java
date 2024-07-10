@@ -2,14 +2,13 @@ import com.dropbox.sign.ApiException;
 import com.dropbox.sign.api.AccountApi;
 import com.dropbox.sign.Configuration;
 import com.dropbox.sign.model.*;
+import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
+import javax.swing.text.*;
 import java.awt.*;
 import java.util.Arrays;
 
@@ -148,71 +147,70 @@ public class AccountActions extends Component {
         });
         dialog.setVisible(true);
     }
-    private  void showResult(Object result) {
+    private static void showResult(Object result) {
         ObjectMapper mapper = new ObjectMapper();
         String jsonText = "";
 
         try {
             jsonText = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result);
-        } catch (Exception var13) {
-            Exception ex = var13;
+        } catch (Exception ex) {
             jsonText = "Error parsing result to JSON: " + ex.getMessage();
         }
 
-        JTextArea textArea = new JTextArea();
-        textArea.setEditable(true);
-        textArea.setFont(new Font("Courier New", 0, 12));
-        StyleContext styleContext = StyleContext.getDefaultStyleContext();
-        AttributeSet regular = styleContext.getStyle("default");
-        styleContext.addAttribute(regular, StyleConstants.Foreground, Color.BLUE);
-        styleContext.addAttribute(regular, StyleConstants.Foreground, Color.GREEN);
-        styleContext.addAttribute(regular, StyleConstants.Foreground, Color.ORANGE);
+        JTextPane textPane = new JTextPane();
+        textPane.setEditable(false);
+        textPane.setFont(new Font("Courier New", Font.PLAIN, 12));
+
+        StyledDocument doc = textPane.getStyledDocument();
+        Style defaultStyle = doc.addStyle("default", null);
+        Style nameStyle = doc.addStyle("name", null);
+        StyleConstants.setForeground(nameStyle, Color.BLUE);
+        Style valueStyle = doc.addStyle("value", null);
+        StyleConstants.setForeground(valueStyle, Color.darkGray);
+        Style otherStyle = doc.addStyle("other", null);
+        StyleConstants.setForeground(otherStyle, Color.RED);
 
         try {
-            Object jsonObject = mapper.readValue(jsonText, Object.class);
-            String formattedJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
-            textArea.setText("");
-            textArea.setTabSize(2);
-            JsonParser parser = mapper.getFactory().createParser(formattedJson);
+            JsonFactory factory = new JsonFactory();
+            JsonParser parser = factory.createParser(jsonText);
 
-            label53:
-            while(true) {
-                while(true) {
-                    if (parser.isClosed()) {
-                        break label53;
-                    }
+            while (!parser.isClosed()) {
+                JsonToken token = parser.nextToken();
+                if (token == null) break;
 
-                    JsonToken jsonToken = parser.nextToken();
-                    if (JsonToken.FIELD_NAME.equals(jsonToken)) {
-                        textArea.append(parser.getCurrentName() + ": ");
-                        textArea.setCaretPosition(textArea.getDocument().getLength());
-                    } else if (JsonToken.VALUE_STRING.equals(jsonToken)) {
-                        textArea.append(parser.getText() + "\n");
-                        textArea.setCaretPosition(textArea.getDocument().getLength());
-                    } else if (!JsonToken.VALUE_NUMBER_INT.equals(jsonToken) && !JsonToken.VALUE_NUMBER_FLOAT.equals(jsonToken)) {
-                        if (!JsonToken.START_OBJECT.equals(jsonToken) && !JsonToken.START_ARRAY.equals(jsonToken)) {
-                            if (JsonToken.END_OBJECT.equals(jsonToken) || JsonToken.END_ARRAY.equals(jsonToken)) {
-                                textArea.append(Arrays.toString(parser.getCurrentToken().asByteArray()) + "\n");
-                                textArea.setCaretPosition(textArea.getDocument().getLength());
-                            }
-                        } else {
-                            textArea.append(Arrays.toString(parser.getCurrentToken().asByteArray()) + "\n");
-                            textArea.setCaretPosition(textArea.getDocument().getLength());
-                        }
-                    } else {
-                        textArea.append(String.valueOf(parser.getValueAsInt()) + "\n");
-                        textArea.setCaretPosition(textArea.getDocument().getLength());
-                    }
+                switch (token) {
+                    case FIELD_NAME:
+                        doc.insertString(doc.getLength(), parser.getCurrentName() + ": ", nameStyle);
+                        break;
+                    case VALUE_STRING:
+                        doc.insertString(doc.getLength(), "\"" + parser.getText() + "\"\n", valueStyle);
+                        break;
+                    case VALUE_NUMBER_INT:
+                    case VALUE_NUMBER_FLOAT:
+                        doc.insertString(doc.getLength(), parser.getNumberValue().toString() + "\n", valueStyle);
+                        break;
+                    case START_OBJECT:
+                    case END_OBJECT:
+                    case START_ARRAY:
+                    case END_ARRAY:
+                        doc.insertString(doc.getLength(), token.toString() + "\n", otherStyle);
+                        break;
+                    default:
+                        doc.insertString(doc.getLength(), token.toString() + "\n", defaultStyle);
+                        break;
                 }
             }
-        } catch (Exception var14) {
-            Exception ex = var14;
-            textArea.setText("Error displaying JSON: " + ex.getMessage());
+        } catch (Exception ex) {
+            try {
+                doc.insertString(doc.getLength(), "Error displaying JSON: " + ex.getMessage(), defaultStyle);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
         }
 
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        JScrollPane scrollPane = new JScrollPane(textPane);
         scrollPane.setPreferredSize(new Dimension(800, 600));
-        JOptionPane.showMessageDialog((Component)null, scrollPane, "JSON Result", -1);
+        JOptionPane.showMessageDialog(null, scrollPane, "JSON Result", JOptionPane.PLAIN_MESSAGE);
     }
 
     private  void handleException(ApiException e) {
