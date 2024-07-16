@@ -7,13 +7,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="044f609d-d9ad-4992-8787-fa8f57736c64" name="Changes" comment="Bulk cc's fix">
-      <change afterPath="$PROJECT_DIR$/src/main/java/TestSimulation.java" afterDir="false" />
+    <list default="true" id="044f609d-d9ad-4992-8787-fa8f57736c64" name="Changes" comment="Simulator added">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/AccountActions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/AccountActions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SignatureRequestActions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SignatureRequestActions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/dev.env" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dev.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +89,7 @@
       <updated>1720498649522</updated>
       <workItem from="1720498650519" duration="19206000" />
       <workItem from="1720557665842" duration="479000" />
-      <workItem from="1720586435941" duration="42621000" />
+      <workItem from="1720586435941" duration="44435000" />
     </task>
     <task id="LOCAL-00001" summary="Form fields signature request bug.">
       <option name="closed" value="true" />
@@ -135,7 +131,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720620710222</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Simulator added">
+      <option name="closed" value="true" />
+      <created>1721107709781</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1721107709781</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,6 +161,7 @@
     <MESSAGE value="Text tags signature request bug. Change order of buttons from signatures" />
     <MESSAGE value="Text tags signature request bug. Change order of buttons from signatures. Made results prettier" />
     <MESSAGE value="Bulk cc's fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bulk cc's fix" />
+    <MESSAGE value="Simulator added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Simulator added" />
   </component>
 </project>
