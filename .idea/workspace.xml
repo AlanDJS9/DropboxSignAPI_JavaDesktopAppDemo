@@ -7,8 +7,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="044f609d-d9ad-4992-8787-fa8f57736c64" name="Changes" comment="Text tags signature request bug. Change order of buttons from signatures. Made results prettier">
+    <list default="true" id="044f609d-d9ad-4992-8787-fa8f57736c64" name="Changes" comment="Bulk cc's fix">
+      <change afterPath="$PROJECT_DIR$/src/main/java/TestSimulation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/AccountActions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/AccountActions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/SignatureRequestActions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SignatureRequestActions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/dev.env" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dev.env" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,28 +53,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;/Users/alanjisa/Desktop/Java/DropboxSignAPIDemo/src/main/java/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "/Users/alanjisa/Desktop/Java/DropboxSignAPIDemo/src/main/java/Main.java",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -88,7 +93,7 @@
       <updated>1720498649522</updated>
       <workItem from="1720498650519" duration="19206000" />
       <workItem from="1720557665842" duration="479000" />
-      <workItem from="1720586435941" duration="2456000" />
+      <workItem from="1720586435941" duration="42621000" />
     </task>
     <task id="LOCAL-00001" summary="Form fields signature request bug.">
       <option name="closed" value="true" />
@@ -114,7 +119,23 @@
       <option name="project" value="LOCAL" />
       <updated>1720588156809</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Bulk cc's fix">
+      <option name="closed" value="true" />
+      <created>1720620699767</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1720620699767</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Bulk cc's fix">
+      <option name="closed" value="true" />
+      <created>1720620710222</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1720620710222</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -135,6 +156,7 @@
     <MESSAGE value="Form fields signature request bug." />
     <MESSAGE value="Text tags signature request bug. Change order of buttons from signatures" />
     <MESSAGE value="Text tags signature request bug. Change order of buttons from signatures. Made results prettier" />
-    <option name="LAST_COMMIT_MESSAGE" value="Text tags signature request bug. Change order of buttons from signatures. Made results prettier" />
+    <MESSAGE value="Bulk cc's fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bulk cc's fix" />
   </component>
 </project>

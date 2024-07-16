@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Dropbox Sign API Client");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
+        frame.setSize(1100, 850);
 
         JTabbedPane tabbedPane = new JTabbedPane();
         var props = new Properties();
@@ -32,7 +32,8 @@ public class Main {
         SignatureRequestApi signatureRequestApi = new SignatureRequestApi(Configuration.getDefaultApiClient());
         EmbeddedApi embeddedApi = new EmbeddedApi(Configuration.getDefaultApiClient());
 
-        tabbedPane.addTab("Account Management", new AccountActions().CreateAccountPanel(accountApi));
+        tabbedPane.addTab("Signature Simulator", new TestSimulation(signatureRequestApi, embeddedApi, clientId));
+        tabbedPane.addTab("Account Management", new AccountActions().createAccountPanel(accountApi));
         tabbedPane.addTab("Signature Requests", new SignatureRequestActions().createSignaturePanel(signatureRequestApi));
         tabbedPane.addTab("Embedded Signatures", new EmbeddedActions().createEmbeddedPanel(signatureRequestApi, embeddedApi, clientId));
         tabbedPane.addTab("Callback Server Testing", new ServerActions().createServerPanel());

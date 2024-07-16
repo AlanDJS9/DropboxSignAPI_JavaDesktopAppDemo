@@ -1,6 +1,5 @@
 import com.dropbox.sign.ApiException;
 import com.dropbox.sign.api.AccountApi;
-import com.dropbox.sign.Configuration;
 import com.dropbox.sign.model.*;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
@@ -15,7 +14,7 @@ import java.util.Arrays;
 public class AccountActions extends Component {
     private JPanel panel;
 
-    public JPanel CreateAccountPanel(AccountApi accountApi) {
+    public JPanel createAccountPanel(AccountApi accountApi) {
         panel = new JPanel(new GridLayout(4, 1));
 
         JButton getAccountButton = new JButton("Get Account");
@@ -28,128 +27,99 @@ public class AccountActions extends Component {
         panel.add(createAccountButton);
         panel.add(verifyAccountButton);
 
-        getAccountButton.addActionListener((e) -> {executeGetAccount(accountApi);});
-        updateAccountButton.addActionListener((e) -> {executeUpdateAccount(accountApi);});
-        createAccountButton.addActionListener((e) -> {executeCreateAccount(accountApi);});
-        verifyAccountButton.addActionListener((e) -> {executeVerifyAccount(accountApi);});
+        getAccountButton.addActionListener(e -> executeGetAccount(accountApi));
+        updateAccountButton.addActionListener(e -> executeUpdateAccount(accountApi));
+        createAccountButton.addActionListener(e -> executeCreateAccount(accountApi));
+        verifyAccountButton.addActionListener(e -> executeVerifyAccount(accountApi));
         return panel;
-
     }
 
+    private void executeGetAccount(AccountApi accountApi) {
+        JDialog dialog = createInputDialog("Get Account", "Email Address:");
+        JButton submitButton = (JButton) dialog.getContentPane().getComponent(3);
+        JTextField emailField = (JTextField) dialog.getContentPane().getComponent(1);
 
-    private  void executeGetAccount(AccountApi accountApi) {
-        JDialog dialog = new JDialog((Frame)null, "Get Account", true);
-        dialog.setSize(400, 200);
-        dialog.setLayout(new GridLayout(0, 2));
-        JLabel emailLabel = new JLabel("Email Address:");
-        JTextField emailField = new JTextField();
-        JButton submitButton = new JButton("Get Account");
-        dialog.add(emailLabel);
-        dialog.add(emailField);
-        dialog.add(new JLabel());
-        dialog.add(submitButton);
-        submitButton.addActionListener((e) -> {
+        submitButton.addActionListener(e -> {
             String email = emailField.getText();
-
+            showLoadingIndicator(dialog);
             try {
-                AccountGetResponse result = accountApi.accountGet((String)null, email);
+                AccountGetResponse result = accountApi.accountGet(null, email);
                 showResult(result);
-            } catch (ApiException var6) {
-                ApiException exx = var6;
-                handleException(exx);
+            } catch (ApiException ex) {
+                handleException(ex);
+            } finally {
+                dialog.dispose();
             }
-
-            dialog.dispose();
         });
         dialog.setVisible(true);
     }
 
-    private  void executeUpdateAccount(AccountApi accountApi) {
-        JDialog dialog = new JDialog((Frame)null, "Update Account", true);
-        dialog.setSize(400, 200);
-        dialog.setLayout(new GridLayout(0, 2));
-        JLabel callbackUrlLabel = new JLabel("Callback URL:");
-        JTextField callbackUrlField = new JTextField();
-        JButton submitButton = new JButton("Update Account");
-        dialog.add(callbackUrlLabel);
-        dialog.add(callbackUrlField);
-        dialog.add(new JLabel());
-        dialog.add(submitButton);
-        submitButton.addActionListener((e) -> {
-            String callbackUrl = callbackUrlField.getText();
-            AccountUpdateRequest updateData = (new AccountUpdateRequest()).callbackUrl(callbackUrl);
+    private void executeUpdateAccount(AccountApi accountApi) {
+        JDialog dialog = createInputDialog("Update Account", "Callback URL:");
+        JButton submitButton = (JButton) dialog.getContentPane().getComponent(3);
+        JTextField callbackUrlField = (JTextField) dialog.getContentPane().getComponent(1);
 
+        submitButton.addActionListener(e -> {
+            String callbackUrl = callbackUrlField.getText();
+            AccountUpdateRequest updateData = new AccountUpdateRequest().callbackUrl(callbackUrl);
+            showLoadingIndicator(dialog);
             try {
                 AccountGetResponse result = accountApi.accountUpdate(updateData);
                 showResult(result);
-            } catch (ApiException var7) {
-                ApiException ex = var7;
+            } catch (ApiException ex) {
                 handleException(ex);
+            } finally {
+                dialog.dispose();
             }
-
-            dialog.dispose();
         });
         dialog.setVisible(true);
     }
 
-    private  void executeCreateAccount(AccountApi accountApi) {
-        JDialog dialog = new JDialog((Frame)null, "Create Account", true);
-        dialog.setSize(400, 200);
-        dialog.setLayout(new GridLayout(0, 2));
-        JLabel emailLabel = new JLabel("Email Address:");
-        JTextField emailField = new JTextField();
-        JButton submitButton = new JButton("Create Account");
-        dialog.add(emailLabel);
-        dialog.add(emailField);
-        dialog.add(new JLabel());
-        dialog.add(submitButton);
-        submitButton.addActionListener((e) -> {
-            String emailAddress = emailField.getText();
-            AccountCreateRequest createData = (new AccountCreateRequest()).emailAddress(emailAddress);
+    private void executeCreateAccount(AccountApi accountApi) {
+        JDialog dialog = createInputDialog("Create Account", "Email Address:");
+        JButton submitButton = (JButton) dialog.getContentPane().getComponent(3);
+        JTextField emailField = (JTextField) dialog.getContentPane().getComponent(1);
 
+        submitButton.addActionListener(e -> {
+            String emailAddress = emailField.getText();
+            AccountCreateRequest createData = new AccountCreateRequest().emailAddress(emailAddress);
+            showLoadingIndicator(dialog);
             try {
                 AccountCreateResponse result = accountApi.accountCreate(createData);
                 showResult(result);
-            } catch (ApiException var7) {
-                ApiException ex = var7;
+            } catch (ApiException ex) {
                 handleException(ex);
+            } finally {
+                dialog.dispose();
             }
-
-            dialog.dispose();
         });
         dialog.setVisible(true);
     }
 
-    private  void executeVerifyAccount(AccountApi accountApi) {
-        JDialog dialog = new JDialog((Frame)null, "Verify Account", true);
-        dialog.setSize(400, 200);
-        dialog.setLayout(new GridLayout(0, 2));
-        JLabel emailLabel = new JLabel("Email Address:");
-        JTextField emailField = new JTextField();
-        JButton submitButton = new JButton("Verify Account");
-        dialog.add(emailLabel);
-        dialog.add(emailField);
-        dialog.add(new JLabel());
-        dialog.add(submitButton);
-        submitButton.addActionListener((e) -> {
-            String emailAddress = emailField.getText();
-            AccountVerifyRequest verifyData = (new AccountVerifyRequest()).emailAddress(emailAddress);
+    private void executeVerifyAccount(AccountApi accountApi) {
+        JDialog dialog = createInputDialog("Verify Account", "Email Address:");
+        JButton submitButton = (JButton) dialog.getContentPane().getComponent(3);
+        JTextField emailField = (JTextField) dialog.getContentPane().getComponent(1);
 
+        submitButton.addActionListener(e -> {
+            String emailAddress = emailField.getText();
+            AccountVerifyRequest verifyData = new AccountVerifyRequest().emailAddress(emailAddress);
+            showLoadingIndicator(dialog);
             try {
                 AccountVerifyResponse result = accountApi.accountVerify(verifyData);
                 showResult(result);
-            } catch (ApiException var7) {
-                ApiException ex = var7;
+            } catch (ApiException ex) {
                 handleException(ex);
+            } finally {
+                dialog.dispose();
             }
-
-            dialog.dispose();
         });
         dialog.setVisible(true);
     }
+
     private static void showResult(Object result) {
         ObjectMapper mapper = new ObjectMapper();
-        String jsonText = "";
+        String jsonText;
 
         try {
             jsonText = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result);
@@ -166,7 +136,7 @@ public class AccountActions extends Component {
         Style nameStyle = doc.addStyle("name", null);
         StyleConstants.setForeground(nameStyle, Color.BLUE);
         Style valueStyle = doc.addStyle("value", null);
-        StyleConstants.setForeground(valueStyle, Color.darkGray);
+        StyleConstants.setForeground(valueStyle, Color.DARK_GRAY);
         Style otherStyle = doc.addStyle("other", null);
         StyleConstants.setForeground(otherStyle, Color.RED);
 
@@ -213,7 +183,25 @@ public class AccountActions extends Component {
         JOptionPane.showMessageDialog(null, scrollPane, "JSON Result", JOptionPane.PLAIN_MESSAGE);
     }
 
-    private  void handleException(ApiException e) {
-        JOptionPane.showMessageDialog((Component)null, "Exception when calling API: " + e.getMessage());
+    private void handleException(ApiException e) {
+        JOptionPane.showMessageDialog(null, "Exception when calling API:\nStatus code: " + e.getCode() + "\nMessage: " + e.getMessage() + "\nResponse body: " + e.getResponseBody());
+    }
+
+    private JDialog createInputDialog(String title, String label) {
+        JDialog dialog = new JDialog((Frame) null, title, true);
+        dialog.setSize(400, 200);
+        dialog.setLayout(new GridLayout(0, 2));
+        JLabel inputLabel = new JLabel(label);
+        JTextField inputField = new JTextField();
+        JButton submitButton = new JButton(title);
+        dialog.add(inputLabel);
+        dialog.add(inputField);
+        dialog.add(new JLabel());
+        dialog.add(submitButton);
+        return dialog;
+    }
+
+    private void showLoadingIndicator(JDialog dialog) {
+        dialog.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
 }

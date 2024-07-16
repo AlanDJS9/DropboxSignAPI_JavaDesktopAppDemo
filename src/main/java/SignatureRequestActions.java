@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import javax.swing.JComboBox;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -30,7 +31,7 @@ public class SignatureRequestActions {
 
     BufferedImage[] pdfImages;
     JLabel coordinatesLabel;
-    JTextField fieldType;
+    JComboBox fieldType;
     JTextField fieldWidth;
     JTextField fieldHeight;
     JTextField fieldPage;
@@ -228,6 +229,18 @@ public class SignatureRequestActions {
     }
 
     private void executeSendSignatureRequestFormsFields(SignatureRequestApi signatureRequestApi) {
+// With the following lines:
+        String[] fieldTypes = {
+                "text",             // A text input field
+                "checkbox",         // A yes/no checkbox
+                "date_signed",      // A date when a document was signed
+                "dropdown",         // An input field for dropdowns
+                "initials",         // An input field for initials
+                "signature",        // A signature input field
+                "text-merge",       // A text field that has default text set by the API
+                "checkbox-merge"    // A checkbox field that has default value set by the API
+        };
+
         fields = new ArrayList();
         JFrame frame = new JFrame("Form Fields Tests");
         frame.setTitle("PDF Viewer");
@@ -244,9 +257,12 @@ public class SignatureRequestActions {
         frame.add(controlPanel, "West");
         coordinatesLabel = new JLabel("Click coordinates: X=, Y=");
         controlPanel.add(coordinatesLabel);
-        fieldType = new JTextField("Text");
+
+        fieldType = new JComboBox<>(fieldTypes);
         controlPanel.add(new JLabel("Field Type:"));
         controlPanel.add(fieldType);
+
+
         fieldWidth = new JTextField("100");
         controlPanel.add(new JLabel("Field Width:"));
         controlPanel.add(fieldWidth);
@@ -785,12 +801,12 @@ public class SignatureRequestActions {
     }
 
     private  void addField() {
-        String type = fieldType.getText();
+        String type = fieldType.getSelectedItem().toString();
         int width = Integer.parseInt(fieldWidth.getText());
         int height = Integer.parseInt(fieldHeight.getText());
         int page = Integer.parseInt(fieldPage.getText());
         String placeholder = fieldPlaceholder.getText();
-        if ("Text".equalsIgnoreCase(type)) {
+        if ("text".equalsIgnoreCase(type)) {
             SubFormFieldsPerDocumentText formField = new SubFormFieldsPerDocumentText();
             formField.documentIndex(0);
             formField.required(true);
@@ -802,8 +818,11 @@ public class SignatureRequestActions {
             formField.page(page);
             formField.placeholder(placeholder);
             formField.validationType(SubFormFieldsPerDocumentText.ValidationTypeEnum.LETTERS_ONLY);
+            formField.autoFillType("email");
+            formField.linkId("linked_fields_id_1");
+            formField.masked(false);
             fields.add(formField);
-        } else if ("Signature".equalsIgnoreCase(type)) {
+        } else if ("signature".equalsIgnoreCase(type)) {
             SubFormFieldsPerDocumentSignature formField = new SubFormFieldsPerDocumentSignature();
             formField.documentIndex(0);
             formField.required(true);
@@ -814,7 +833,91 @@ public class SignatureRequestActions {
             formField.y(selectedY);
             formField.page(page);
             fields.add(formField);
+        } else if ("checkbox".equalsIgnoreCase(type)) {
+            SubFormFieldsPerDocumentCheckbox formField = new SubFormFieldsPerDocumentCheckbox();
+            formField.documentIndex(0);
+            formField.required(true);
+            formField.signer(0);
+            formField.width(width);
+            formField.height(height);
+            formField.x(selectedX);
+            formField.y(selectedY);
+            formField.page(page);
+            formField.isChecked(false);
+            fields.add(formField);
+        } else if ("date_signed".equalsIgnoreCase(type)) {
+            SubFormFieldsPerDocumentDateSigned formField = new SubFormFieldsPerDocumentDateSigned();
+            formField.documentIndex(0);
+            formField.required(true);
+            formField.signer(0);
+            formField.width(width);
+            formField.height(height);
+            formField.x(selectedX);
+            formField.y(selectedY);
+            formField.page(page);
+            fields.add(formField);
+        } else if ("dropdown".equalsIgnoreCase(type)) {
+            SubFormFieldsPerDocumentDropdown formField = new SubFormFieldsPerDocumentDropdown();
+            formField.documentIndex(0);
+            formField.required(true);
+            formField.signer(0);
+            formField.width(width);
+            formField.height(height);
+            formField.x(selectedX);
+            formField.y(selectedY);
+            formField.page(page);
+            formField.options(Arrays.asList(new String[]{"Option 1", "Option 2"}));
+            formField.content("Option 2");
+            fields.add(formField);
+        } else if ("initials".equalsIgnoreCase(type)) {
+            SubFormFieldsPerDocumentInitials formField = new SubFormFieldsPerDocumentInitials();
+            formField.documentIndex(0);
+            formField.required(true);
+            formField.signer(0);
+            formField.width(width);
+            formField.height(height);
+            formField.x(selectedX);
+            formField.y(selectedY);
+            formField.page(page);
+            fields.add(formField);
+        }  else if ("text-merge".equalsIgnoreCase(type)) {
+            SubFormFieldsPerDocumentTextMerge formField = new SubFormFieldsPerDocumentTextMerge();
+            formField.documentIndex(0);
+            formField.required(true);
+            formField.signer(0);
+            formField.width(width);
+            formField.height(height);
+            formField.x(selectedX);
+            formField.y(selectedY);
+            formField.page(page);
+            formField.hashCode();
+            fields.add(formField);
+        } else if ("checkbox-merge".equalsIgnoreCase(type)) {
+            SubFormFieldsPerDocumentCheckboxMerge formField = new SubFormFieldsPerDocumentCheckboxMerge();
+            formField.documentIndex(0);
+            formField.required(true);
+            formField.signer(0);
+            formField.width(width);
+            formField.height(height);
+            formField.x(selectedX);
+            formField.y(selectedY);
+            formField.page(page);
+            fields.add(formField);
+        } else if ("hyperlink".equalsIgnoreCase(type)) {
+            SubFormFieldsPerDocumentHyperlink formField = new SubFormFieldsPerDocumentHyperlink();
+            formField.documentIndex(0);
+            formField.required(true);
+            formField.signer(0);
+            formField.width(width);
+            formField.height(height);
+            formField.x(selectedX);
+            formField.y(selectedY);
+            formField.page(page);
+            formField.content("Click me!");
+            formField.contentUrl("http://example.com");
+            fields.add(formField);
         }
+
 
         JLabel fieldLabel = new JLabel("Field added: " + type + " at (" + selectedX + ", " + selectedY + ") on page " + page);
         fieldsPanel.add(fieldLabel);
@@ -824,7 +927,12 @@ public class SignatureRequestActions {
 
     private  void sendSignatureRequest(SignatureRequestApi signatureRequestApi) {
         if (signer1 != null) {
-            SignatureRequestSendRequest data = (new SignatureRequestSendRequest()).title(requestTitle).subject(requestSubject).message(requestMessage).addFileUrlsItem("https://www.dropbox.com/s/ad9qnhbrjjn64tu/mutual-NDA-example.pdf?dl=1").addSignersItem(signer1);
+            SignatureRequestSendRequest data = (new SignatureRequestSendRequest())
+                    .title(requestTitle)
+                    .subject(requestSubject)
+                    .message(requestMessage)
+                    .addFileUrlsItem("https://www.dropbox.com/s/ad9qnhbrjjn64tu/mutual-NDA-example.pdf?dl=1")
+                    .addSignersItem(signer1);
             Iterator var4 = fields.iterator();
 
             while(var4.hasNext()) {
